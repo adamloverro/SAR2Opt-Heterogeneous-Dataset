@@ -32,7 +32,29 @@ class BaseModel(ABC):
         self.opt = opt
         self.gpu_ids = opt.gpu_ids
         self.isTrain = opt.isTrain
-        self.device = torch.device('cuda:{}'.format(self.gpu_ids[0])) if self.gpu_ids else torch.device('cpu')  # get device name: CPU or GPU
+
+        if opt.device == 'cuda':
+            if self.gpu_ids:
+                if not torch.cuda.is_available():
+                    self.device = torch.device('cpu')
+                    print('Warning: CUDA device selected but not available. Using CPU instead.')
+                else:
+                    self.device = torch.device('cuda:{}'.format(self.gpu_ids[0]))
+                    print('Using CUDA on GPU {}'.format(self.gpu_ids[0]))
+            else:
+                print('Using CPU')
+                self.device = torch.device('cpu')
+        elif opt.device == 'mps':
+            
+            if not torch.backends.mps.is_available():
+                print('Warning: MPS device selected, but not available. Using CPU instead.')
+                self.device = torch.device('cpu')
+            else:
+                print('Using MPS')
+                self.device = torch.device('mps')
+        else:
+            print('Using CPU')
+            self.device = torch.device('cpu')
         
         # checkpoints_dir = ./checkpoint 
         self.save_dir = os.path.join(opt.checkpoints_dir, opt.name)  # save all the checkpoints to save_dir
@@ -154,12 +176,17 @@ class BaseModel(ABC):
                 save_filename = '%s_net_%s.pth' % (epoch, name)
                 save_path = os.path.join(self.save_dir, save_filename)
                 net = getattr(self, 'net' + name)
+                # Save the model; use the CPU model type
+                torch.save(net.to('cpu').state_dict(), save_path)
 
-                if len(self.gpu_ids) > 0 and torch.cuda.is_available():
-                    torch.save(net.module.cpu().state_dict(), save_path)
-                    net.cuda(self.gpu_ids[0])
-                else:
-                    torch.save(net.cpu().state_dict(), save_path)
+                # Reset net to original device
+                net.to(self.device)
+
+                #if len(self.gpu_ids) > 0 and torch.cuda.is_available():
+                #    torch.save(net.module.cpu().state_dict(), save_path)
+                #    net.cuda(self.gpu_ids[0])
+                #else:
+                #    torch.save(net.cpu().state_dict(), save_path)
 
     def __patch_instance_norm_state_dict(self, state_dict, module, keys, i=0):
         """Fix InstanceNorm checkpoints incompatibility (prior to 0.4)"""
