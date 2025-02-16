@@ -17,6 +17,16 @@ You can get the dataset from:
 - [Google Drive](https://drive.google.com/file/d/1XB9pWq-tVdxQsbVALxbYIF0Em90J4kkR/view?usp=sharing)  
 - [BaiduDisk](https://pan.baidu.com/s/1xQ1nc2aPFdJ99SI2upl5Tg) (hy8d)
 
+At least for pix2pix training, the folder arrangement of the dataset, as downloaded from the google site above, is a so-called 'unaligned' dataset, i.e. the A B images are divided into sepearate directories:
+As downloaded:
+```
+sar2opt/
+├── trainA/
+├── trainB/
+├── testA/
+└── testB/
+```
+Therefore, to use this dataset, use the --dataset_mode=unaligned option flag for training and test.
 
 ## Image-to-image translation results on __SAR2Opt dataset__
 Here are some translated results on our SAR2Opt dataset with well-known GAN-based methods, which have been included in our GRSL paper.
