@@ -6,7 +6,7 @@
     "configurations": [
 
         {
-            "name": "Python: Train CycleGAN-Pix2Pix",
+            "name": "Train CycleGAN-Pix2Pix",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/CycleGAN-Pix2Pix/train.py",
