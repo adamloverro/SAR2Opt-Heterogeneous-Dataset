@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Train CycleGAN-Pix2Pix",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/CycleGAN-Pix2Pix/train.py",
+            "args": [
+            "--device", "mps",
+            "--dataroot", "${workspaceFolder}/.data/sar2opt",
+            "--name", "sar2opt_pix2pix",
+            "--model", "pix2pix",
+            "--direction", "AtoB",
+            "--dataset_mode", "unaligned",
+            "--serial_batches",
+            "--no_flip"
+            //"--save_latest_freq","100"
+            //"--load_size", "256",
+            //"--crop_size", "256",
+            //"--preprocess", "crop"
+            //"--display_winsize", "256"
+            ],
+            "console": "integratedTerminal",
+            "pythonPath": "/Users/adamloverro/projects/venv/sar2opt/bin/python"
+        }
+    ]
+}
